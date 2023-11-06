@@ -10,4 +10,9 @@ public class UserViewController {
     public String Login() {
         return "/login";
     }
+
+    @GetMapping("/hihi")
+    public String Hihi() {
+        return "/hihi";
+    }
 }
