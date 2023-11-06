@@ -54,5 +54,4 @@ public class User {
         this.penalty=penalty;
         this.schedule=schedule;
     }
-
 }
