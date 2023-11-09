@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 상세</title>
+</head>
+<body>
+<div th:text="|이름 : ${user.name}|"></div>
+<div th:text="|전공 : ${user.major}|"></div>
+<div th:text="|포지션 : ${user.position}|"></div>
+<div th:text="|페널티 : ${user.penalty}|"></div>
+<div th:text="|통산 전적 : ${user.record}|"></div>
+<div th:text="|스케줄 : ${user.schedule}|"></div>
+</body>
+</html>

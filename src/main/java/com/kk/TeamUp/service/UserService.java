@@ -6,6 +6,8 @@ import com.kk.TeamUp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -18,6 +20,19 @@ public class UserService {
                 .major(request.getMajor())
                 .position(request.getPosition())
                 .build()).getId();
+    }
+
+    public void delete(long id) {
+        userRepository.deleteById(id);
+    }
+
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public User findUser(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("not exists!"));
     }
 
 }
