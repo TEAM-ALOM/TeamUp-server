@@ -11,5 +11,6 @@
 <div th:text="|페널티 : ${user.penalty}|"></div>
 <div th:text="|통산 전적 : ${user.record}|"></div>
 <div th:text="|스케줄 : ${user.schedule}|"></div>
+<button type="submit" th:onclick="|location.href='@{update/{id}(id=${user.id})}'|">수정</button>
 </body>
 </html>

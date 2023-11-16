@@ -2,28 +2,40 @@ package com.kk.TeamUp.controller;
 
 import com.kk.TeamUp.domain.User;
 import com.kk.TeamUp.dto.AddUserRequest;
+import com.kk.TeamUp.dto.UpdateUserRequest;
 import com.kk.TeamUp.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class UserApiController {
     private final UserService userService;
 
     @PostMapping("/api/user")
-    public String UserRegister(AddUserRequest request) {
-        userService.save(request);
-        return "redirect:/CreateTest";
+    public ResponseEntity<User> userRegister(AddUserRequest request) {
+        User user = userService.save(request);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(user);
     }
 
     //삭제 api
     @DeleteMapping("/api/user/{id}")
-    public String UserDelete(@PathVariable long id) {
+    public ResponseEntity<Void> userDelete(@PathVariable long id) {
         userService.delete(id);
-        return "redirect:/DeleteTest";
+        return ResponseEntity.ok()
+                .build();
     }
+
+    @PutMapping("/api/user/{id}")
+    public ResponseEntity<User> userUpdate(@PathVariable long id, @RequestBody UpdateUserRequest request) {
+        User user = userService.updateUser(id, request);
+        return ResponseEntity.ok()
+                .body(user);
+    }
+
 }
