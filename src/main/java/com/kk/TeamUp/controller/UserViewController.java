@@ -22,16 +22,6 @@ public class UserViewController {
         return "/login";
     }
 
-    @GetMapping("/CreateTest")
-    public String Created() {
-        return "/CreateTest";
-    }
-
-    @GetMapping("/DeleteTest")
-    public String Deleted() {
-        return "/DeleteTest";
-    }
-
     @GetMapping("/users")
     public String findAllUsers(Model model) {
         List<User> users = userService.findAllUsers();
@@ -44,5 +34,11 @@ public class UserViewController {
         User user = userService.findUser(id);
         model.addAttribute("user",user);
         return "/oneUser";
+    }
+
+    @GetMapping("/users/update/{id}")
+    public String updateUser(@PathVariable long id, Model model) {
+        model.addAttribute("id",id);
+        return "/update";
     }
 }

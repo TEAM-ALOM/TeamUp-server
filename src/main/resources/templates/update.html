@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="container">
+    <form action="/api/user/${id}" method="post">
+        <div class="form-group">
+            <input type="hidden" name="_method" value="PUT"/>
+            <input type="text"  name = "name" placeholder="이름 수정">
+            <input type="text" name = "position" placeholder="포지션 수정">
+        </div>
+        <button type="submit" onclick="location.href='users.html'">수정</button>
+    </form>
+</div>
+</body>
+</html>

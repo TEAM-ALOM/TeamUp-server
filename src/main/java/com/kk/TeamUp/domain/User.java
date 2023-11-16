@@ -1,10 +1,7 @@
 package com.kk.TeamUp.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -13,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
@@ -55,5 +53,10 @@ public class User {
         this.record=record;
         this.penalty=penalty;
         this.schedule=schedule;
+    }
+
+    public void update(String name, String position) {
+        this.name = name;
+        this.position = position;
     }
 }
