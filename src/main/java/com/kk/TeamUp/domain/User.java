@@ -7,6 +7,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,7 +18,7 @@ import java.time.LocalDateTime;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id",updatable = false)
+    @Column(name="user_id",updatable = false)
     private Long id;
 
     @Column(name="name",nullable = false)
@@ -36,6 +38,9 @@ public class User {
 
     @Column(name="schedule")
     private String schedule;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserMatching> userMatchings = new ArrayList<UserMatching>();
 
     @CreatedDate
     @Column(name="created_at")
