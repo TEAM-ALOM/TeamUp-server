@@ -1,26 +1,28 @@
 package com.kk.TeamUp.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
+@Setter
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Matching {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id",updatable = false)
+    @Column(name="matching_id")
     private Long id;
 
-    @Column(name="created_user",nullable = false)
-    private String createdUser;
+    @OneToMany(mappedBy = "matching")
+    private List<UserMatching> userMatchings = new ArrayList<UserMatching>();
 
     @Column(name="game_time")
     private LocalDateTime gameTime;
@@ -34,7 +36,7 @@ public class Matching {
     @Column(name="title",nullable = false)
     private String title;
 
-    @Column(name="detail", nullable = false)
+    @Column(name="detail",nullable = false)
     private String detail;
 
     @CreatedDate
@@ -45,9 +47,13 @@ public class Matching {
     @Column(name="updated_at")
     private LocalDateTime updatedAt; //매칭 마지막 수정 시간
 
+    public void addUserMatching(UserMatching userMatching) {
+        userMatchings.add(userMatching);
+        userMatching.setMatching(this);
+    }
+
     @Builder
-    public Matching(String createdUser, LocalDateTime gameTime,String category, String place, String title, String detail) {
-        this.createdUser = createdUser;
+    public Matching(LocalDateTime gameTime,String category, String place, String title, String detail) {
         this.gameTime = gameTime;
         this.category =category;
         this.place =place;

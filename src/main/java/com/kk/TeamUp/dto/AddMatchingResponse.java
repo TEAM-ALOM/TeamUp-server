@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Getter
 public class AddMatchingResponse {
 
-    private String createdUser;
     private LocalDateTime gameTime;
     private String category;
     private String place;
@@ -17,7 +16,6 @@ public class AddMatchingResponse {
     private String detail;
 
     public AddMatchingResponse(Matching matching) {
-        this.createdUser = matching.getCreatedUser();
         this.gameTime = matching.getGameTime();
         this.category = matching.getCategory();
         this.place = matching.getPlace();
