@@ -2,13 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div class="container">
-    <form action="/api/user" method="post">
-        <div class="form-group">
-            <input type="text" name = "name" placeholder="이름을 입력하세요">
-            <input type="text" name = "major" placeholder="전공을 입력하세요">
-            <input type="text" name = "position" placeholder="선호 포지션을 입력하세요">
+    <form action="/login-ing" method="post">
+        <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />
+        <div>
+            <label>Email address</label>
+            <input type="text"  name="name">
         </div>
-        <button type="submit">등록</button>
+        <div >
+            <label>Major</label>
+            <input type="password" name="major">
+        </div>
+        <button type="submit">Submit</button>
     </form>
 </div>
 </body>

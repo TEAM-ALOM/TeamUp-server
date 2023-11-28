@@ -8,7 +8,6 @@
 <div th:each="user : ${users}">
     <div th:text="|이름 : ${user.name}|"></div>
     <div th:text="|전공 : ${user.major}|"></div>
-    <div th:text="|포지션 : ${user.position}|"></div>
     <a th:href="@{/users/{id}(id=${user.id})}">상세 조회</a>
     <hr>
 </div>
