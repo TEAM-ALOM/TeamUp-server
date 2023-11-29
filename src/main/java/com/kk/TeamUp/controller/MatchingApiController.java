@@ -16,7 +16,7 @@ public class MatchingApiController {
     private final MatchingService matchingService;
 
     @PostMapping("/api/matching")
-    public ResponseEntity<Matching> makeMatching(@RequestBody AddMatchingRequest request) {
+    public ResponseEntity<Matching> makeMatching(AddMatchingRequest request) {
         Matching matching = matchingService.saveMatching(request);
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -31,7 +31,7 @@ public class MatchingApiController {
     }
 
     @PutMapping("/api/matching/{id}")
-    public ResponseEntity<Matching> updateMatching(@PathVariable long id, @RequestBody UpdateMatchingRequest request) {
+    public ResponseEntity<Matching> updateMatching(@PathVariable long id, UpdateMatchingRequest request) {
         Matching matching = matchingService.updateMatching(id, request);
         return ResponseEntity.ok()
                 .body(matching);
