@@ -1,5 +1,8 @@
 package com.kk.TeamUp.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.kk.TeamUp.dto.UpdateUserMatching;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -28,6 +31,14 @@ public class User implements UserDetails {
     @Column(name="user_id",updatable = false)
     private Long id;
 
+    // 세종 api 이용할 때 id로써 사용할 필드
+    @Column(name="student_id",nullable = false, unique = true)
+    private String studentId;
+
+    //user 엔티티에 저장할 refreshToken
+    @Column(name="refresh_token")
+    private String refreshToken;
+
     @Column(name="name",nullable = false, unique = true)
     private String name;
 
@@ -40,8 +51,11 @@ public class User implements UserDetails {
     @Column(name="penalty")
     private Long penalty;
 
-    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<UserMatching> userMatchings = new ArrayList<UserMatching>();
+
+
 
     @CreatedDate
     @Column(name="created_at")
@@ -51,8 +65,14 @@ public class User implements UserDetails {
     @Column(name="updated_at")
     private LocalDateTime updatedAt; //계정 마지막 로그인 시간
 
+    public void addUserMatching(UserMatching userMatching) {
+        userMatchings.add(userMatching);
+        userMatching.setUser(this);
+    }
+
     @Builder
-    public User(String name, String major, Long record, Long penalty, String auth) {
+    public User(String studentId, String name, String major, Long record, Long penalty, String auth) {
+        this.studentId = studentId;
         this.name=name;
         this.major=major;
         this.record=record;
@@ -63,7 +83,11 @@ public class User implements UserDetails {
         this.name = name;
     }
 
-    @PrePersist //영속성 컨텍스트로 persist 하기 전 실행됨
+    public void updateMatching(UpdateUserMatching request) {
+        this.userMatchings = userMatchings;
+    }
+
+    @PrePersist //영속성 컨텍스트로 persist 하기 전 실행됨 / default 값 매기기 위해서 설정
     public void prePersist() {
         this.penalty = this.penalty == null ? 0 : this.penalty;
         this.record = this.record == null ? 0 : this.record;
@@ -77,14 +101,14 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        return major;
-        //비밀번호 자체가 없으므로 일단 전공으로 처리
+        return null;
+        //비밀번호 자체가 없으므로 일단 전공으로 처리 -> 비밀번호를 저장하지 않으므로 null 처리
         //추후 비밀번호로 바꿀 수 있음
     }
 
     @Override
     public String getUsername() {
-        return name; //유니크해야 함
+        return studentId; //유니크해야 함
     }
 
     //만료여부 체크해줌

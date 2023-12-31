@@ -1,6 +1,8 @@
 package com.kk.TeamUp.service;
 
 import com.kk.TeamUp.domain.Matching;
+import com.kk.TeamUp.domain.User;
+import com.kk.TeamUp.domain.UserMatching;
 import com.kk.TeamUp.dto.AddMatchingRequest;
 import com.kk.TeamUp.dto.UpdateMatchingRequest;
 import com.kk.TeamUp.repository.MatchingRepository;
@@ -14,15 +16,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MatchingService {
     private final MatchingRepository matchingRepository;
+    private final UserMatchingService userMatchingService;
 
-    public Matching saveMatching(AddMatchingRequest request) {
-        System.out.println(request.getTitle());
-        return matchingRepository.save(Matching.builder()
+    public Matching saveMatching(User user, AddMatchingRequest request) {
+        Matching matching = Matching.builder()
                         .category(request.getCategory())
                         .place(request.getPlace())
                         .detail(request.getDetail())
                         .title(request.getTitle())
-                        .build());
+                        .build();
+
+        userMatchingService.save(user,matching);
+        matchingRepository.save(matching);
+
+        return matching;
     }
 
     public List<Matching> findAllMatching() {

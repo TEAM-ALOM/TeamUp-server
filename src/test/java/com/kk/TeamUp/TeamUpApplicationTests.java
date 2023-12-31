@@ -26,7 +26,7 @@ class TeamUpApplicationTests {
 
 			UserMatching userMatching = new UserMatching();
 
-			matching.addUserMatching(userMatching);
+			//matching.addUserMatching(userMatching);
 		}
 
 }

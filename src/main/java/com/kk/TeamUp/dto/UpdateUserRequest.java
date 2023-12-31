@@ -1,15 +1,15 @@
 package com.kk.TeamUp.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import com.kk.TeamUp.domain.UserMatching;
+import lombok.*;
+
+import java.util.List;
 
 @Getter
+@Setter
 @RequiredArgsConstructor
 public class UpdateUserRequest {
     private final String name;
-    private final String major;
-    private final String position;
-    private final String record;
-    private final Long penalty;
+    private final List<UserMatching> userMatchings;
+
 }
