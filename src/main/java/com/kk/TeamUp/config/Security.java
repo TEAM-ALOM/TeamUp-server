@@ -36,11 +36,12 @@ public class Security {
                         .requestCache(requestCache)) //자동으로 continue 쿼리 붙여지는 것 방지하기 위한 조치
                 .authorizeHttpRequests((request)->request
                         //뒤의 2개는 세종 api 테스트용 (나중에 제거 할 수 있음)
-                        .requestMatchers("/login","/signup","/api/user","/api/sejong","/sejong")
+                        .requestMatchers("/login","/signup","/api/user","/api/sejong","/sejong","/api/matching")
                         .permitAll()
                 )
                 .authorizeHttpRequests((request) -> request
                         .anyRequest().authenticated() //위의 특정 url 제외하고는 인증 필요함을 의미
+                        //.anyRequest().permitAll()
                 )
                 .addFilterBefore(new TokenAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable();

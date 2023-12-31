@@ -7,6 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddUserResponse {
+    private String studentId;
     private String name;
     private String major;
     private String position;

@@ -14,10 +14,10 @@ public class UserDetailService implements UserDetailsService {
     private final UserRepository userRepository;
 
 
-    // 사용자 정보를 가져올 때, 이름으로 찾아 가져올 수 있도록 해주는 서비스 로직
+    // 사용자 정보를 가져올 때, 학번으로 찾아 가져올 수 있도록 해주는 서비스 로직
     @Override
-    public UserDetails loadUserByUsername(String name)  {
-        return userRepository.findByName(name)
-                .orElseThrow(() -> new IllegalArgumentException((name)));
+    public UserDetails loadUserByUsername(String studentId)  {
+        return userRepository.findByStudentId(studentId)
+                .orElseThrow(() -> new IllegalArgumentException((studentId)));
     }
 }

@@ -1,5 +1,8 @@
 package com.kk.TeamUp.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.kk.TeamUp.dto.UpdateUserMatching;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -14,14 +17,14 @@ import java.util.List;
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor()
 public class Matching {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="matching_id")
     private Long id;
 
-    @OneToMany(mappedBy = "matching")
+    @OneToMany(mappedBy = "matching", cascade = CascadeType.ALL)
     private List<UserMatching> userMatchings = new ArrayList<UserMatching>();
 
     @Column(name="game_time")
@@ -47,9 +50,11 @@ public class Matching {
     @Column(name="updated_at")
     private LocalDateTime updatedAt; //매칭 마지막 수정 시간
 
+
     public void addUserMatching(UserMatching userMatching) {
+        //System.out.println(userMatching.getMatching());
         userMatchings.add(userMatching);
-        userMatching.setMatching(this);
+        //userMatching.setMatching(this);
     }
 
     @Builder
@@ -61,5 +66,7 @@ public class Matching {
         this.detail = detail;
     }
 
-
+    public void updateMatching(UpdateUserMatching request) {
+        this.userMatchings = userMatchings;
+    }
 }

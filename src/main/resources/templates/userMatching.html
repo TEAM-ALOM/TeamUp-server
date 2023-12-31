@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>참여한 매칭</title>
+</head>
+<body>
+<div th:each="matching : ${matchings}">
+    <div th:text="|매칭 이름 : ${matching}|"></div>
+    <hr>
+</div>
+</div>
+</body>
+</html>

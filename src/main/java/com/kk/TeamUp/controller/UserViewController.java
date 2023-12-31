@@ -1,7 +1,10 @@
 package com.kk.TeamUp.controller;
 
 
+import com.kk.TeamUp.domain.Matching;
 import com.kk.TeamUp.domain.User;
+import com.kk.TeamUp.domain.UserMatching;
+import com.kk.TeamUp.service.UserMatchingService;
 import com.kk.TeamUp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserViewController {
     private final UserService userService;
+    private final UserMatchingService userMatchingService;
 
     @GetMapping("/signup")
     public String signUp() {
@@ -58,5 +62,16 @@ public class UserViewController {
     @GetMapping("/sejong")
     public String sejongApiTest() {
         return "/sejong";
+    }
+
+    @GetMapping("/users/matching/{id}")
+    public String getMatchings(@PathVariable long id, Model model) {
+
+        List<UserMatching> userMatchings = userMatchingService.findAllUserMatchings();
+        List<String> matchingTitle = userService.getMatchingTitle(userMatchings, id);
+
+
+        model.addAttribute("matchings", matchingTitle);
+        return "/userMatching";
     }
 }

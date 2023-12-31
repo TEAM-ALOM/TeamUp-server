@@ -1,5 +1,6 @@
 package com.kk.TeamUp.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,20 +16,13 @@ public class UserMatching {
     @Column(name="user_matching_id", updatable = false)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="matching_id")
     private Matching matching;
 
-    public static UserMatching createUserMatching(User user, Matching matching){
-        UserMatching userMatching = new UserMatching();
-        userMatching.setUser(user);
-        userMatching.setMatching(matching);
-
-        return userMatching;
-    }
 
 }
