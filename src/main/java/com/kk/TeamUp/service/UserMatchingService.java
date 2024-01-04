@@ -15,11 +15,14 @@ public class UserMatchingService {
     private final UserMatchingRepository userMatchingRepository;
 
     public UserMatching save(User user, Matching matching) {
-        UserMatching userMatching = new UserMatching();
-        userMatching.setUser(user);
-        userMatching.setMatching(matching);
+        UserMatching userMatching = UserMatching.builder()
+                        .user(user)
+                        .matching(matching)
+                        .build();
 
-        return userMatchingRepository.save(userMatching);
+        userMatchingRepository.save(userMatching); //여기가 문제
+
+        return userMatching;
     }
 
     public List<UserMatching> findAllUserMatchings() {

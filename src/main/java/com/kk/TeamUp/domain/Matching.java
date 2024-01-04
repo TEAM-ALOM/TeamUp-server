@@ -24,7 +24,7 @@ public class Matching {
     @Column(name="matching_id")
     private Long id;
 
-    @OneToMany(mappedBy = "matching", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "matching")
     private List<UserMatching> userMatchings = new ArrayList<UserMatching>();
 
     @Column(name="game_time")

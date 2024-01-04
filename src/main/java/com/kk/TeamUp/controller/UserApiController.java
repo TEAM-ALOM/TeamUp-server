@@ -88,7 +88,7 @@ public class UserApiController {
     // 인증 api 실험용
     // 회원이 아닐 시 회원가입 진행하고, 회원일 시, 해당 회원이 가지고 있는 리프레쉬 토큰 반환
     @PostMapping("/api/sejong")
-    public ResponseEntity<Map<String,String>> sejongApi(VerifyUserRequest request, Model model) {
+    public ResponseEntity<Map<String,String>> sejongApi(@RequestBody VerifyUserRequest request, Model model, HttpServletResponse response) {
         try {
             String url = "https://auth.imsejong.com/auth?method=DosejongSession";
 
@@ -109,12 +109,11 @@ public class UserApiController {
 
             try {
                 user = userService.findByStudentId(request.getId());
-
-
                 tokenMap.put("refreshToken",user.getRefreshToken());
             } catch(Exception e) {
                 String studentName = newNode.get("result").get("body").get("name").toString();
                 String studentMajor = newNode.get("result").get("body").get("major").toString();
+
                 user = userService.save(new AddUserRequest(request.getId(),studentName,studentMajor));
 
                 //로그인 인증 시 토큰을 발급해줌
@@ -128,6 +127,9 @@ public class UserApiController {
 
                 tokenMap.put("token",token);
                 tokenMap.put("refreshToken",refreshToken);
+
+                tokenProvider.setHeaderAccessToken(response, token);
+                tokenProvider.setHeaderRefreshToken(response,refreshToken);
             }
 
             return ResponseEntity.ok()
