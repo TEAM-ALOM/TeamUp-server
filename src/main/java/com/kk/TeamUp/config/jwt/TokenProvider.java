@@ -1,14 +1,19 @@
 package com.kk.TeamUp.config.jwt;
 
 import com.kk.TeamUp.domain.User;
+import com.kk.TeamUp.service.UserDetailService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -20,6 +25,7 @@ import java.util.Set;
 @Service
 public class TokenProvider {
     private final JwtProperties jwtProperties;
+    private final UserDetailService userDetailService;
 
     //토큰 생성 메소드
     public String generateToken(User user, Duration expiredAt) {
@@ -35,7 +41,7 @@ public class TokenProvider {
                 .setIssuer(jwtProperties.getIssuer())
                 .setIssuedAt(now)
                 .setExpiration(expiry)
-                .setSubject(user.getName())
+                .setSubject(user.getStudentId())
                 .claim("id", user.getId()) //claim id를 user id로 설정
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
                 .compact();
@@ -64,23 +70,30 @@ public class TokenProvider {
     //안의 상세 코드는 아직까지는 이해를 못했음
     public Authentication getAuthentication(String token) {
         Claims claims = getClaims(token);
-        Set<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
-        //SimpleGrantedAuthority : 계정이 갖고 있는 권한 목록 리턴해줌
-        //singleton으로 단 하나의 객체만 저장 가능한 컬렉션이 됨
-        //immutable 하게 되어서, 추가/삭제 등의 작업 수행 불가능하게 됨
-
-        return new UsernamePasswordAuthenticationToken(
-                new org.springframework.security.core.userdetails.User(
-                        claims.getSubject(),"",authorities
-                ),
-                token,authorities
-        );
-        // 유저 객체를 만들고, 권한이 부여된 인증 토큰 발급하는 개념??
+        UserDetails userDetails = userDetailService.loadUserByUsername(claims.getSubject());
+        return new UsernamePasswordAuthenticationToken(userDetails,token, userDetails.getAuthorities());
     }
+
+    public void setHeaderAccessToken(HttpServletResponse response, String accessToken) {
+        response.setHeader("Authorization", "bearer " + accessToken);
+    }
+
+    public void setHeaderRefreshToken(HttpServletResponse response, String refreshToken) {
+        response.setHeader("RefreshToken", "bearer " + refreshToken);
+    }
+
 
     public Long getUserId(String token) {
         Claims claims = getClaims(token);
         return claims.get("id",Long.class);
+    }
+
+    public String getStudentId(String token) {
+        return Jwts.parser()
+                .setSigningKey(jwtProperties.getSecretKey())
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 
 }

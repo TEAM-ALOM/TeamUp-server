@@ -6,11 +6,13 @@ import com.kk.TeamUp.domain.UserMatching;
 import com.kk.TeamUp.dto.AddMatchingRequest;
 import com.kk.TeamUp.dto.UpdateMatchingRequest;
 import com.kk.TeamUp.service.MatchingService;
+import com.kk.TeamUp.service.UserDetailService;
 import com.kk.TeamUp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,9 +25,10 @@ public class MatchingApiController {
     private final UserService userService;
 
     @PostMapping("/api/matching")
-    public ResponseEntity<Matching> makeMatching(@RequestBody AddMatchingRequest request) {
-        User user = userService.findByStudentId("21011859");
-        Matching matching = matchingService.saveMatching(user, request);
+    public ResponseEntity<Matching> makeMatching(@AuthenticationPrincipal User user, @RequestBody AddMatchingRequest request) {
+        //User user = userService.findByStudentId(userDetail.getUsername());
+        //System.out.println(user.getStudentId());
+        Matching matching = matchingService.saveMatching(user, request); // 문제 부분
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(matching);

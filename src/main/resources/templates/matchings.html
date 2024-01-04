@@ -8,7 +8,7 @@
 <div th:each="matching : ${matchings}">
     <div th:text="|제목 : ${matching.title}|"></div>
     <div th:text="|상세 내용 : ${matching.detail}|"></div>
-    <div th:text="|유저 : ${matching.userMatchings}|"></div>
+    <div th:text="|참여 유저들 : ${users}|"></div>
     <hr>
 </div>
 </body>

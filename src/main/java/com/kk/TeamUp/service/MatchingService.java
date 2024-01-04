@@ -18,6 +18,7 @@ public class MatchingService {
     private final MatchingRepository matchingRepository;
     private final UserMatchingService userMatchingService;
 
+    @Transactional
     public Matching saveMatching(User user, AddMatchingRequest request) {
         Matching matching = Matching.builder()
                         .category(request.getCategory())
@@ -26,8 +27,8 @@ public class MatchingService {
                         .title(request.getTitle())
                         .build();
 
-        userMatchingService.save(user,matching);
         matchingRepository.save(matching);
+        userMatchingService.save(user,matching);
 
         return matching;
     }

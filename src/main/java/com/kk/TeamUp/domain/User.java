@@ -52,7 +52,7 @@ public class User implements UserDetails {
     private Long penalty;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
     private List<UserMatching> userMatchings = new ArrayList<UserMatching>();
 
 
