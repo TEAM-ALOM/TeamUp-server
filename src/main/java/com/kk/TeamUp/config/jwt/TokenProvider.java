@@ -79,7 +79,8 @@ public class TokenProvider {
     }
 
     public void setHeaderRefreshToken(HttpServletResponse response, String refreshToken) {
-        response.setHeader("RefreshToken", "bearer " + refreshToken);
+        response.setHeader("refreshToken", "bearer " + refreshToken);
+        //만약 안되면 이곳이 문제
     }
 
 

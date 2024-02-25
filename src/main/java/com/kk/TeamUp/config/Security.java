@@ -2,23 +2,25 @@ package com.kk.TeamUp.config;
 
 import com.kk.TeamUp.config.jwt.TokenProvider;
 import com.kk.TeamUp.service.UserService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
-import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @Configuration
@@ -38,7 +40,7 @@ public class Security {
                         .requestCache(requestCache)) //자동으로 continue 쿼리 붙여지는 것 방지하기 위한 조치
                 .authorizeHttpRequests((request)->request
                         //뒤의 2개는 세종 api 테스트용 (나중에 제거 할 수 있음)
-                        .requestMatchers("/api/sejong","/sejong","/error")
+                        .requestMatchers("/api/sejong","/sejong","/error","/logout")
                         .permitAll()
                 )
                 .authorizeHttpRequests((request) -> request

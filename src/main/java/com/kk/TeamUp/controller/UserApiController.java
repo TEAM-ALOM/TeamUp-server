@@ -69,7 +69,7 @@ public class UserApiController {
         if (authentication!=null) {
             new SecurityContextLogoutHandler().logout(request, response,authentication);
         }
-        return "redirect:/login";
+        return "redirect:/sejong";
     }
 
     @PostMapping("/api/join/{userId}/{matchingId}")
@@ -105,11 +105,22 @@ public class UserApiController {
             JsonNode newNode = objectMapper.readTree(responseEntity.getBody());
 
             User user;
+            String token;
+            String refreshToken;
             Map<String, String> tokenMap = new HashMap<>();
 
             try {
                 user = userService.findByStudentId(request.getId());
-                tokenMap.put("refreshToken",user.getRefreshToken());
+
+                token = tokenProvider.generateToken(user, Duration.ofSeconds(1));
+                refreshToken = tokenProvider.generateToken(user, Duration.ofSeconds(14));
+
+                user = userService.updateRefreshToken(request.getId(), new CreateAccessTokenRequest(refreshToken));
+                tokenProvider.setHeaderAccessToken(response, token);
+                tokenProvider.setHeaderRefreshToken(response,refreshToken);
+
+                tokenMap.put("token",token);
+                tokenMap.put("refreshToken",refreshToken);
             } catch(Exception e) {
                 String studentName = newNode.get("result").get("body").get("name").toString();
                 String studentMajor = newNode.get("result").get("body").get("major").toString();
@@ -118,9 +129,9 @@ public class UserApiController {
 
                 //로그인 인증 시 토큰을 발급해줌
                 //유효시간을 1시간으로 설정 -> 추후 변경 가능
-                String token = tokenProvider.generateToken(user, Duration.ofHours(1));
+                token = tokenProvider.generateToken(user, Duration.ofHours(1));
                 //refresh token도 만들어서 전송
-                String refreshToken = tokenProvider.generateToken(user, Duration.ofDays(14));
+                refreshToken = tokenProvider.generateToken(user, Duration.ofDays(14));
 
                 //리프레쉬 토큰 user 엔티티에 저장
                 user = userService.updateRefreshToken(request.getId(), new CreateAccessTokenRequest(refreshToken));

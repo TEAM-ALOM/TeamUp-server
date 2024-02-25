@@ -43,12 +43,13 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader(HEADER_AUTHORIZATION);
-        String authorizationRefreshHeader = request.getHeader("RefreshToken");
+        String authorizationRefreshHeader = request.getHeader("refreshToken");
         //request의 헤더에 포함된 것들 중, Authorization에 해당하는 부분을 가져와 저장하게 됨
 
         //authorizationHeader 자체는 앞에 Bearer이라는 문구가 추가된 상태 -> 이를 제거해주어야 함
         String token = getAccessToken(authorizationHeader);
         String refreshToken = getRefreshToken(authorizationRefreshHeader);
+
 
         if (tokenProvider.validToken(token)) {
             Authentication authentication = tokenProvider.getAuthentication(token);
@@ -66,6 +67,14 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 tokenProvider.setHeaderAccessToken(response, newAccessToken);
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+            else {
+                token = null;
+                refreshToken = null;
+
+                tokenProvider.setHeaderAccessToken(response, token);
+                tokenProvider.setHeaderRefreshToken(response,refreshToken);
+
             }
         }
         filterChain.doFilter(request,response);
